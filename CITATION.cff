@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "statfb: Statistically Optimized Filter Banks"
+type: software
+authors:
+  - family-names: "Name"
+    given-names: "Author"
+    affiliation: "Department of Electrical and Electronics Engineering"
+version: 1.0.0
+date-released: 2026-07-08
+license: MIT
+repository-code: "https://github.com/USERNAME/statfb"
+keywords:
+  - filter banks
+  - lifting scheme
+  - wavelets
+  - energy compaction
+  - graph signal processing
+  - Gaussian Markov random fields
+  - Kron reduction
+preferred-citation:
+  type: article
+  title: "Statistically Optimized Lifting Filter Banks: From
+    Autocorrelation-Adapted Compaction to Precision-Driven Graph Wavelets"
+  authors:
+    - family-names: "Name"
+      given-names: "Author"
+  year: 2026
+  journal: "(under review)"
