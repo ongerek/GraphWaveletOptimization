@@ -1,10 +1,5 @@
 function fails = run_tests2
 %RUN_TESTS2 Verification harness for the Wiener-lifting module.
-% path bootstrap: locate src/ relative to this file
-if exist('design_compaction_fb', 'file') ~= 2
-    addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src'));
-end
-
 tr = @(name, err, tol) fprintf('%-52s %.3e  [%s]\n', name, err, ok(err<tol));
 fails = 0;
 
