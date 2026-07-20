@@ -41,7 +41,6 @@ multiscale transforms:
 | `src/` | all core functions (19 files) |
 | `tests/` | verification harnesses: `run_tests` (Module 1), `run_tests2` (Module 2), `run_tests3` (Module 3) — 31 automated pass/fail checks in total; `run_all_tests` runs everything and errors on any failure |
 | `demos/` | `demo_benchmark`, `demo_lifting_benchmark`, `demo_graph_benchmark` — the three benchmark studies |
-| `paper/` | LaTeX manuscript (`main.tex`, `refs.bib`); `runme.m`, which regenerates every figure and table of the paper into `paper/paper_out/`; and `fig8_localization_sweep.m`, a standalone generator for the manuscript's support-size sweep figure (Fig. 8) |
 | `.github/workflows/` | CI: runs the full test suite in GNU Octave on every push |
 
 ## Requirements
@@ -100,7 +99,6 @@ of the Kron-reduced Laplacian).
 ## Reproducing the paper
 
 ```matlab
-cd paper
 addpath ../src
 runme                       % all figures (PNG+EPS) and LaTeX table
                             % fragments -> paper/paper_out/  (a few minutes)
