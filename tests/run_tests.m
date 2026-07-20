@@ -1,10 +1,5 @@
 function fails = run_tests
 %RUN_TESTS Verification harness for the compaction-fb package.
-% path bootstrap: locate src/ relative to this file
-if exist('design_compaction_fb', 'file') ~= 2
-    addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src'));
-end
-
 tol_report = @(name, err, tol) fprintf('%-46s %.3e  [%s]\n', name, err, ...
     merge_str(err < tol));
 fails = 0;
