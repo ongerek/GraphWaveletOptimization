@@ -19,6 +19,11 @@ function out = design_graph_lifting(L, Sigma, e, opts)
 %                neighborhoods: per odd node i with support S,
 %                p_i = Sigma(S,S)^{-1} Sigma(S,i)   (graph analog of the
 %                np-tap constrained Wiener predictor of Module 2)
+%     'wiener_knn'  MMSE predictor restricted, per odd node, to its
+%                opts.knn nearest even vertices in weighted shortest-path
+%                distance (edge length 1/w_ij). Gives a fine-grained
+%                support-size axis for the localization sweep (the graph
+%                analog of the tap-support sweep of Table V/np).
 %     'exact'    P = Sigma_oe' ... full conditional mean
 %                E[x_o|x_e] = Sigma_oe Sigma_ee^{-1} x_e  (dense; equals
 %                -J_oo^{-1} J_oe for J = Sigma^{-1})
@@ -40,6 +45,7 @@ ptype = getdef(opts, 'predict', 'wiener');
 utype = getdef(opts, 'update', 'gouze');
 hops  = getdef(opts, 'hops', 1);
 uhops = getdef(opts, 'uhops', 0);       % 0 => unconstrained closed form
+knn   = getdef(opts, 'knn', 4);         % support size for 'wiener_knn'
 
 ie = find(e); io = find(~e);
 ne = numel(ie); no = numel(io);
@@ -58,6 +64,8 @@ switch ptype
         P = Sigma(io, ie) / Sigma(ie, ie);
     case 'wiener'
         P = wiener_rows(Sigma, io, ie, hopmask(W, io, ie, hops));
+    case 'wiener_knn'
+        P = wiener_rows(Sigma, io, ie, knnmask(W, io, ie, knn));
     otherwise
         error('unknown predict');
 end
@@ -102,6 +110,28 @@ A = double(W > 0);
 R = A;
 for k = 2:h, R = double((R*A + R) > 0); end
 M = R(rows, cols) > 0;
+end
+
+function M = knnmask(W, rows, cols, k)
+% M(i,j) true if cols(j) is among the k nearest vertices to rows(i) in
+% weighted shortest-path distance on W (edge length = 1/weight).
+n   = size(W, 1);
+len = inf(n); len(W > 0) = 1 ./ W(W > 0);
+k   = min(k, numel(cols));
+M   = false(numel(rows), numel(cols));
+for i = 1:numel(rows)
+    d = inf(n, 1); d(rows(i)) = 0; done = false(n, 1);
+    for it = 1:n
+        dd = d; dd(done) = inf;
+        [dmin, u] = min(dd);
+        if isinf(dmin), break; end
+        done(u) = true;
+        nb = find(isfinite(len(u, :)));
+        d(nb) = min(d(nb), d(u) + len(u, nb).');
+    end
+    [~, ord] = sort(d(cols));
+    M(i, ord(1:k)) = true;
+end
 end
 
 function P = wiener_rows(Sigma, io, ie, M)
